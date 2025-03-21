@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ส่วนแสดงไม่ออกไปยังหน้าจอของ Browser -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Learning from website this (https://www.w3schools.com/) -->
+    <div class="container">
+        <div class="header form-input">
+            Register form
+        </div>
+    
+        <div class="flex form-input">
+            <div class="header-form">First Name</div>
+            <input class="form" type="text">
+        </div>
+        <div class="flex form-input">
+            <div class="header-form">Last Name </div>
+            <input class="form" type="text">
+        </div>
+        <div class="flex form-input">
+            <div class="header-form">Age</div> 
+            <input class="form" type="number" min="0" max="100">
+        </div>
+
+        <div class="flex gender form-input">
+            <div class="header-form">
+                Gender
+            </div>
+            <div>
+                <input type="radio" name="gender"> man
+                <input type="radio" name="gender"> women
+                <input type="radio" name="gender"> no comment
+            </div>
+        </div>
+    
+        <div class="form-input">
+            Things of Interest
+            <div>
+                <input type="checkbox" name="interest"> book
+            </div>
+            <div>
+                <input type="checkbox" name="interest"> video game
+            </div>
+            <div>
+                <input type="checkbox" name="interest"> music
+            </div>
+        </div>
+    
+        <div class="form-input">
+            Additional identity description
+            <div>
+                <textarea></textarea>
+            </div>
+        </div>
+        <div class="form-input center">
+            <a href="https://www.w3schools.com/">T&C</a>
+        </div>
+        <div class="center">
+            <button class="button">Commit</button>
+        </div>
+    </div>
+</body>
+</html>

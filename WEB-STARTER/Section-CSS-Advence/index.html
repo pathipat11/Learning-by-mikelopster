@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container .item {
+            background-color: blue;
+        }
+        
+        .main-container > .item {
+            background-color: red;
+            padding: 10px
+        }
+        
+        .button {
+            border: 0;
+            background-color: gray;
+            padding: 10px;
+        }
+        
+        .button.active {
+            background-color: green;
+        }
+        
+        .button.danger {
+            background-color: brown;
+        }
+        
+        .item1 + .item2 {
+            background-color: tomato;
+        }
+        
+        input[type=text] {
+            border: 1px gray solid;
+            height: 100px
+        }        
+    </style>
+</head>
+<body>
+    <!-- 1. item เป็นลูกของ container -->
+    <div class="container">
+        Container
+        <div class="item">
+            item
+    </div>
+
+    <!-- 2. item เป็นลูกของ container แต่ชั้นเดียว -->
+    <div class="main-container">
+        Container
+        <div class="item">
+            Item
+            <div class="item">
+                item 1
+            </div>
+            <div class="item">
+                item 2
+            </div>
+            <div class="item">
+                item 3
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. มี  class ติดกัน -->
+    <button class="button">this is button</button>
+    <button class="button active">this is button</button>
+    <button class="active">this is button</button>
+    <button class="button danger">this is button</button>
+
+    <!-- 4. เพื่อนกัน (adjacent) -->
+     <div class="item1">Item1</div>
+     <div class="item2">Item2</div>
+
+     <!-- 5. attribute selector -->
+      <input type="text" name="firstname">
+      <input type="text" name="lastname">
+      <input type="text" name="description">
+</body>
+</html>
