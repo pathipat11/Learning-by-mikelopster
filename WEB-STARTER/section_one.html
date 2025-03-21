@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ส่วนแสดงไม่ออกไปยังหน้าจอของ Browser -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* this is comment in language CSS */
+        /* 1.แต่งใคร ? (id, class, DOM) 2.แต่งอะไร ? */
+        @font-face {
+            font-family: 'kanit';
+            src: url('./Kanit/Kanit-Regular.ttf');
+        }
+        
+        body {
+            background-color: dimgray;
+            font-family: 'kanit';
+        }
+
+        #register {
+            font-size: 24px;
+            color: azure;
+            font-weight: 800;
+            /* padding คือ การขยายภายในกล่อง element นั้น*/
+           /* padding-left: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;*/
+            padding: 10px;
+            /* margin คือ การขยายส่วนนอกกล่อง element*/
+            /*margin-top: 10px;
+            margin-bottom: 10px;*/
+            margin: 10px;
+            /* border คือ การแก้ไขเส้นกล่อง*/
+            border: 1px rgb(0, 0, 0) solid;
+            background-color: rgba(255, 217, 0, 0.236);
+        }
+
+        .header-form {
+            font-weight: 800;
+        }
+
+        .form {
+            display: block;
+        }
+
+        .gender {
+            display: flex;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .item-left {
+            background-color: red;
+            flex: 1;
+        }
+
+        .item-right {
+            background-color: blue;
+            flex: 1;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+        }
+
+        .item-1, .item-3 {
+            background-color: pink;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Learning from website this (https://www.w3schools.com/) -->
+
+    <div class="container">
+        <div class="item-left">Left</div>
+        <div class="item-right">Right</div>
+    </div>
+    
+    <div class="grid-container">
+        <div class="grid-item item-1">item 1</div>
+        <div class="grid-item item-2">item 2</div>
+        <div class="grid-item item-3">item 3</div>
+        <div class="grid-item item-4">item 4</div>
+    </div>
+
+    <div id="register">Register form</div>
+
+    <span class="header-form">Name:</span> <input class="form" type="text">
+    <span class="header-form">Last name:</span> <input class="form" type="text"> <br>
+    Age: <input class="form" type="number" min="100">
+    
+    <div class="gender">
+        gender:
+        <div>
+            <input type="radio" name="gender"> man
+        </div>
+        <div>
+            <input type="radio" name="gender"> women
+        </div>
+        <div>
+            <input type="radio" name="gender"> no comment
+        </div>
+    </div>
+
+    <div>
+        Things of Interest:
+        <div>
+            <input type="checkbox" name="interest"> book
+        </div>
+        <div>
+            <input type="checkbox" name="interest"> video game
+        </div>
+        <div>
+            <input type="checkbox" name="interest"> music
+        </div>
+    </div>
+
+    <div>
+        Additional identity description:
+        <div>
+            <textarea></textarea>
+        </div>
+    </div>
+    <a href="https://www.w3schools.com/">T&C</a>
+    <button>Add</button>
+</body>
+</html>
