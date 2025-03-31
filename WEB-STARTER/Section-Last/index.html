@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ส่วนแสดงไม่ออกไปยังหน้าจอของ Browser -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Learning from website this (https://www.w3schools.com/) -->
+    <div class="container">
+        <div class="header form-input">
+            Register form
+        </div>
+    
+        <div class="flex form-input">
+            <div class="header-form">First Name</div>
+            <input class="form" name="firstname" type="text">
+        </div>
+        <div class="flex form-input">
+            <div class="header-form">Last Name </div>
+            <input class="form" name="lastname" type="text">
+        </div>
+        <div class="flex form-input">
+            <div class="header-form">Age</div> 
+            <input class="form" name="age" type="number" min="0" max="100">
+        </div>
+
+        <div class="flex gender form-input">
+            <div class="header-form">
+                Gender
+            </div>
+            <div>
+                <input type="radio" name="gender" value="man"> Man
+                <input type="radio" name="gender" value="woman"> Women
+                <input type="radio" name="gender" value="noComment"> No Comment
+            </div>
+        </div>
+    
+        <div class="form-input">
+            Things of Interest
+            <div>
+                <input name="interest" type="checkbox"  value="book"> Book
+            </div>
+            <div>
+                <input name="interest" type="checkbox" value="videoGame"> Video game
+            </div>
+            <div>
+                <input name="interest" type="checkbox" value="music"> Music
+            </div>
+            <div>
+                <input name="interest" type="checkbox" value="guitar"> Guitar
+            </div>
+        </div>
+    
+        <div class="form-input">
+            Additional identity description
+            <div>
+                <textarea name="description"></textarea>
+            </div>
+        </div>
+        <div class="form-input center">
+            <a href="https://www.w3schools.com/">T&C</a>
+        </div>
+        <div id="message" class="message"></div>
+        <div class="center">
+            <button onclick="submitData()" class="button">Commit</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="./index.js"></script>
+</body>
+</html>

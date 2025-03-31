@@ -16,15 +16,15 @@
     
         <div class="flex form-input">
             <div class="header-form">First Name</div>
-            <input class="form" type="text">
+            <input class="form" name="firstName" type="text">
         </div>
         <div class="flex form-input">
             <div class="header-form">Last Name </div>
-            <input class="form" type="text">
+            <input class="form" name="lastName" type="text">
         </div>
         <div class="flex form-input">
             <div class="header-form">Age</div> 
-            <input class="form" type="number" min="0" max="100">
+            <input class="form" name="age" type="number" min="0" max="100">
         </div>
 
         <div class="flex gender form-input">
@@ -32,37 +32,38 @@
                 Gender
             </div>
             <div>
-                <input type="radio" name="gender"> man
-                <input type="radio" name="gender"> women
-                <input type="radio" name="gender"> no comment
+                <input type="radio" name="gender" value="man"> Man
+                <input type="radio" name="gender" value="woman"> Women
+                <input type="radio" name="gender" value="noComment"> No Comment
             </div>
         </div>
     
         <div class="form-input">
             Things of Interest
             <div>
-                <input type="checkbox" name="interest"> book
+                <input name="interest" type="checkbox"  value="book"> Book
             </div>
             <div>
-                <input type="checkbox" name="interest"> video game
+                <input name="interest" type="checkbox" value="videoGame"> Video game
             </div>
             <div>
-                <input type="checkbox" name="interest"> music
+                <input name="interest" type="checkbox" value="music"> Music
             </div>
         </div>
     
         <div class="form-input">
             Additional identity description
             <div>
-                <textarea></textarea>
+                <textarea name="description"></textarea>
             </div>
         </div>
         <div class="form-input center">
             <a href="https://www.w3schools.com/">T&C</a>
         </div>
         <div class="center">
-            <button class="button">Commit</button>
+            <button onclick="submitData()" class="button">Commit</button>
         </div>
     </div>
+    <script src="./index.js"></script>
 </body>
 </html>
