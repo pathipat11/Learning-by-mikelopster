@@ -1,0 +1,70 @@
+
+การเรียกใช้ฟังก์ชันทีละตัวแปร
+func main() {
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, username, password, databaseName)
+
+	sdb, err := sql.Open("postgres", psqlInfo)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db = sdb
+
+	defer db.Close()
+
+	err = db.Ping()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	app := fiber.New()
+
+	app.Get("/product/:id", getProductHandler)
+
+	app.Listen(":8080")
+
+	// Connection Database Successful
+	// fmt.Println("Connection Database Successful!")
+
+	// // Create Product
+	// err = createProduct(&Product{Name: "Go product2", Price: 444})
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// fmt.Println("Create product Successful!")
+
+	// // Get Product
+	// product, err := getProduct(2)
+	// fmt.Println("Get product Successful!", product)
+
+	// // Update Product
+	// product, err := updateProduct(6, &Product{Name: "UUU", Price: 333})
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("Update product Successful!", product)
+
+	// // Delete Product
+	// err = deleteProduct(8)
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("Delete product Successful!")
+
+	// // Get Product Query
+	// products, err := getProduct()
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("Get product all Successful! \n", products)
+
+}
