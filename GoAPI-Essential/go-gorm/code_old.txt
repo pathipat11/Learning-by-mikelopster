@@ -1,0 +1,44 @@
+main.go
+    "
+    // // Create book data
+	// newBook := &Book{
+	// 	Name:        "Palm",
+	// 	Author:      "PalmMattra",
+	// 	Description: "Test",
+	// 	Price:       200,
+	// }
+
+	// createBook(db, newBook)
+	// fmt.Println(createBook)
+
+	// // Get book by id 1
+	// currentBook := getBook(db, 1)
+
+	// fmt.Println(currentBook)
+
+	// // Update book by id 1
+	// currentBook := getBook(db, 1)
+
+	// currentBook.Name = "New Palm"
+	// currentBook.Price = 400
+
+	// updateBook(db, currentBook)
+
+	// // Delete Book by id 1
+	// deleteBook(db, 1)
+
+	
+	// // Create book data
+	// createBook(db, &Book{
+	// 	Name:        "Palm",
+	// 	Author:      "Palmtestst",
+	// 	Description: "Test",
+	// 	Price:       50,
+	// })
+
+	currentBook := searchBook(db, "Palm")
+
+	for _, book := range currentBook {
+		fmt.Println(book.ID, book.Name, book.Author, book.Price)
+	}
+    "
