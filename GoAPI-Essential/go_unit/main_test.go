@@ -1,28 +1,56 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http/httptest"
 	"testing"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestAdd(t *testing.T) {
-	testCases := []struct {
-		name     string
-		num      int
-		expected int
+// TestUserRoute function for testing the /users route.
+func TestUserRoute(t *testing.T) {
+	app := setup()
+
+	// Define test cases
+	tests := []struct {
+		description  string
+		requestBody  User
+		expectStatus int
 	}{
-		{"case 2", 2, 2},
-		{"case 5", 5, 120},
-		{"case -1", -1, 0},
+		{
+			description:  "Valid input",
+			requestBody:  User{"jane.doe@example.com", "Jane Doe", 30},
+			expectStatus: fiber.StatusOK,
+		},
+		{
+			description:  "Invalid email",
+			requestBody:  User{"invalid-email", "Jane Doe", 30},
+			expectStatus: fiber.StatusBadRequest,
+		},
+		{
+			description:  "Invalid fullname",
+			requestBody:  User{"jane.doe@example.com", "12345", 30},
+			expectStatus: fiber.StatusBadRequest,
+		},
+		{
+			description:  "Invalid age",
+			requestBody:  User{"jane.doe@example.com", "Jane Doe", -5},
+			expectStatus: fiber.StatusBadRequest,
+		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			result := Factorial(tc.num)
-			expectedResult := tc.expected
+	// Run tests
+	for _, test := range tests {
+		t.Run(test.description, func(t *testing.T) {
+			reqBody, _ := json.Marshal(test.requestBody)
+			req := httptest.NewRequest("POST", "/users", bytes.NewReader(reqBody))
+			req.Header.Set("Content-Type", "application/json")
+			resp, _ := app.Test(req)
 
-			if result != expectedResult {
-				t.Errorf("Factorial(%d) = %d is wrong, correct is %d", tc.num, result, expectedResult)
-			}
+			assert.Equal(t, test.expectStatus, resp.StatusCode)
 		})
 	}
 }
