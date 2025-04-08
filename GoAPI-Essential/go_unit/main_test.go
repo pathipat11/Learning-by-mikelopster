@@ -1,56 +1,52 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-	"net/http/httptest"
+	"regexp"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-// TestUserRoute function for testing the /users route.
-func TestUserRoute(t *testing.T) {
-	app := setup()
+func TestAddUser(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub dabase connection", err)
+	}
+	defer db.Close()
 
-	// Define test cases
-	tests := []struct {
-		description  string
-		requestBody  User
-		expectStatus int
-	}{
-		{
-			description:  "Valid input",
-			requestBody:  User{"jane.doe@example.com", "Jane Doe", 30},
-			expectStatus: fiber.StatusOK,
-		},
-		{
-			description:  "Invalid email",
-			requestBody:  User{"invalid-email", "Jane Doe", 30},
-			expectStatus: fiber.StatusBadRequest,
-		},
-		{
-			description:  "Invalid fullname",
-			requestBody:  User{"jane.doe@example.com", "12345", 30},
-			expectStatus: fiber.StatusBadRequest,
-		},
-		{
-			description:  "Invalid age",
-			requestBody:  User{"jane.doe@example.com", "Jane Doe", -5},
-			expectStatus: fiber.StatusBadRequest,
-		},
+	gormDB, err := gorm.Open(postgres.New(postgres.Config{Conn: db}), &gorm.Config{})
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a gorm database", err)
 	}
 
-	// Run tests
-	for _, test := range tests {
-		t.Run(test.description, func(t *testing.T) {
-			reqBody, _ := json.Marshal(test.requestBody)
-			req := httptest.NewRequest("POST", "/users", bytes.NewReader(reqBody))
-			req.Header.Set("Content-Type", "application/json")
-			resp, _ := app.Test(req)
+	t.Run("add user successfully", func(t *testing.T) {
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "users" WHERE email = $1 AND "users"."deleted_at" IS NULL`)).
+			WithArgs("john.doe@example.com").
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
 
-			assert.Equal(t, test.expectStatus, resp.StatusCode)
-		})
-	}
+			// Define your expectations for SQL operations
+		mock.ExpectBegin()
+		mock.ExpectQuery("^INSERT INTO \"users\" (.+)$").
+			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+		mock.ExpectCommit()
+
+		err := AddUser(gormDB, "John Doe", "john.doe@example.com", 30)
+		assert.NoError(t, err)
+
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+
+	t.Run("fail to add user with existing email", func(t *testing.T) {
+		mock.ExpectQuery(regexp.QuoteMeta(`SELECT count(*) FROM "users" WHERE email = $1 AND "users"."deleted_at" IS NULL`)).
+			WithArgs("john.doe@example.com").
+			WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(1))
+
+		err := AddUser(gormDB, "John Doe", "john.doe@example.com", 30)
+		assert.EqualError(t, err, "email already exists")
+
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }

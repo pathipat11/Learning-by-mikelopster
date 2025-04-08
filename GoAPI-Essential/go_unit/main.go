@@ -1,51 +1,79 @@
 package main
 
 import (
-	"regexp"
+	"errors"
+	"fmt"
+	"log"
+	"os"
+	"time"
 
-	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-var validate = validator.New()
-
-// User struct with validation tags.
 type User struct {
-	Email    string `json:"email" validate:"required,email"`
-	Fullname string `json:"fullname" validate:"required,fullname"`
-	Age      int    `json:"age" validate:"required,numeric,min=1"`
+	gorm.Model
+	Fullname string
+	Email    string `gorm:"unique"`
+	Age      int
 }
 
-// setup function initializes the Fiber app.
-func setup() *fiber.App {
-	app := fiber.New()
+// InitializeDB initializes the database and automigrates the User model.
+func InitializeDB() *gorm.DB {
+	const (
+		host     = "localhost"  // or the Docker service name if running in another container
+		port     = 5432         // default PostgreSQL port
+		user     = "postgres"   // as defined in docker-compose.yml
+		password = "root"       // as defined in docker-compose.yml
+		dbname   = "mydatabase" // as defined in docker-compose.yml
+	)
 
-	// Register the custom validation function for 'fullname'
-	validate.RegisterValidation("fullname", validateFullname)
+	// New logger for detailed SQL logging
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold: time.Second, // Slow SQL threshold
+			LogLevel:      logger.Info, // Log level
+			Colorful:      true,        // Enable color
+		},
+	)
 
-	app.Post("/users", func(c *fiber.Ctx) error {
-		user := new(User)
-
-		if err := c.BodyParser(user); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
-		}
-
-		if err := validate.Struct(user); err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-		}
-
-		return c.Status(fiber.StatusOK).JSON(user)
+	// Configure your PostgreSQL database details here
+	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: newLogger, // add Logger
 	})
-
-	return app
+	if err != nil {
+		panic("failed to connect to database")
+	}
+	db.AutoMigrate(&User{})
+	return db
 }
 
-// validateFullname checks if the value contains only alphabets and spaces.
-func validateFullname(fl validator.FieldLevel) bool {
-	return regexp.MustCompile(`^[a-zA-Z\s]+$`).MatchString(fl.Field().String())
+// AddUser adds a new user to the database.
+func AddUser(db *gorm.DB, fullname, email string, age int) error {
+	user := User{Fullname: fullname, Email: email, Age: age}
+
+	// Check if email already exists
+	var count int64
+	db.Model(&User{}).Where("email = ?", email).Count(&count)
+	if count > 0 {
+		return errors.New("email already exists")
+	}
+
+	// Save the new user
+	result := db.Create(&user)
+	return result.Error
 }
 
 func main() {
-	app := setup()
-	app.Listen(":8000")
+	db := InitializeDB()
+	// Your application code
+	err := AddUser(db, "jj Doe", "jj.doe@example.com", 30)
+	if err != nil {
+		fmt.Println("err DB:", err)
+	}
 }
