@@ -1,79 +1,47 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"log"
-	"os"
-	"time"
+	"pathipat/adapters"
+	"pathipat/core"
 
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
-type User struct {
-	gorm.Model
-	Fullname string
-	Email    string `gorm:"unique"`
-	Age      int
-}
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "root"
+	dbname   = "mydatabase"
+)
 
-// InitializeDB initializes the database and automigrates the User model.
-func InitializeDB() *gorm.DB {
-	const (
-		host     = "localhost"  // or the Docker service name if running in another container
-		port     = 5432         // default PostgreSQL port
-		user     = "postgres"   // as defined in docker-compose.yml
-		password = "root"       // as defined in docker-compose.yml
-		dbname   = "mydatabase" // as defined in docker-compose.yml
-	)
+func main() {
+	app := fiber.New()
 
-	// New logger for detailed SQL logging
-	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
-		logger.Config{
-			SlowThreshold: time.Second, // Slow SQL threshold
-			LogLevel:      logger.Info, // Log level
-			Colorful:      true,        // Enable color
-		},
-	)
-
-	// Configure your PostgreSQL database details here
+	// Initialize the database connection
 	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: newLogger, // add Logger
-	})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
 	}
-	db.AutoMigrate(&User{})
-	return db
-}
 
-// AddUser adds a new user to the database.
-func AddUser(db *gorm.DB, fullname, email string, age int) error {
-	user := User{Fullname: fullname, Email: email, Age: age}
+	// Migrate the schema
+	db.AutoMigrate(&core.Order{})
 
-	// Check if email already exists
-	var count int64
-	db.Model(&User{}).Where("email = ?", email).Count(&count)
-	if count > 0 {
-		return errors.New("email already exists")
-	}
+	// Set up the core service and adapters
+	orderRepo := adapters.NewGormOrderRepository(db)
+	orderService := core.NewOrderService(orderRepo)
+	orderHandler := adapters.NewHttpOrderHandler(orderService)
 
-	// Save the new user
-	result := db.Create(&user)
-	return result.Error
-}
+	// Define routes
+	app.Post("/order", orderHandler.CreateOrder)
 
-func main() {
-	db := InitializeDB()
-	// Your application code
-	err := AddUser(db, "jj Doe", "jj.doe@example.com", 30)
-	if err != nil {
-		fmt.Println("err DB:", err)
-	}
+	// Start the server
+	app.Listen(":8000")
+
 }

@@ -1,0 +1,20 @@
+mode: set
+pathipat/main.go:21.13,29.16 4 0
+pathipat/main.go:29.16,30.41 1 0
+pathipat/main.go:34.2,45.21 6 0
+pathipat/core/order_service.go:13.57,15.2 1 1
+pathipat/core/order_service.go:17.59,19.22 1 1
+pathipat/core/order_service.go:19.22,21.3 1 1
+pathipat/core/order_service.go:22.2,22.43 1 1
+pathipat/core/order_service.go:22.43,24.3 1 1
+pathipat/core/order_service.go:26.2,26.12 1 1
+pathipat/adapters/gorm_adapter.go:13.63,15.2 1 1
+pathipat/adapters/gorm_adapter.go:17.60,18.56 1 1
+pathipat/adapters/gorm_adapter.go:18.56,20.3 1 1
+pathipat/adapters/gorm_adapter.go:22.2,22.12 1 1
+pathipat/adapters/http_adapter.go:13.71,15.2 1 1
+pathipat/adapters/http_adapter.go:17.60,19.45 2 1
+pathipat/adapters/http_adapter.go:19.45,21.3 1 1
+pathipat/adapters/http_adapter.go:23.2,23.53 1 1
+pathipat/adapters/http_adapter.go:23.53,25.3 1 1
+pathipat/adapters/http_adapter.go:27.2,27.50 1 1
